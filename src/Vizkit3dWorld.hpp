@@ -19,7 +19,6 @@
 namespace vizkit3d_world {
 
 typedef std::map<std::string, vizkit3d::RobotVisualization*> RobotVizMap;
-static QApplication* app = NULL;
 
 /**
  * Vizkit3dWorld
@@ -235,6 +234,7 @@ protected:
     double zFar;
     double horizontalFov;
 
+    static QApplication* app;
 };
 
 }
