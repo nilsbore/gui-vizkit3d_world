@@ -26,30 +26,24 @@ typedef std::map<std::string, vizkit3d::RobotVisualization*> RobotVizMap;
  */
 class Vizkit3dWorld {
 public:
+
     /**
      * Vizkit3dWorld constructor
-     */
-    Vizkit3dWorld();
-
-    /**
-     * Vizkit3dWorld destructor
-     */
-    virtual ~Vizkit3dWorld();
-
-    /**
-     * initialize
      *
      * @param path: the string with the path to the sdf world file
      * @param modelPaths: list with paths to models
      */
-    void initialize(std::string path = std::string(""),
+    Vizkit3dWorld(std::string path = std::string(""),
                   std::vector<std::string> modelPaths = std::vector<std::string>(),
                   std::vector<std::string> ignoredModels = std::vector<std::string>(),
                   int cameraWidth = 800, int cameraHeight = 600,
                   double horizontalFov = 60.0,
                   double zNear = 0.01, double zFar = 1000.0);
 
-    void deInitialize();
+    /**
+     * Vizkit3dWorld destructor
+     */
+    virtual ~Vizkit3dWorld();
 
     RobotVizMap getRobotVizMap();
 
@@ -208,6 +202,7 @@ protected:
      */
     void applyTransformation(std::string sourceFrame, std::string targetFrame, QVector3D position, QQuaternion orientation);
 
+
     void applyCameraParams();
 
 
@@ -226,6 +221,11 @@ protected:
     std::map<std::string, sdf::ElementPtr> toSdfElement; //map sdf element using model name
 
     /**
+     * Used in qt event loop to manager the Qt windows and events
+     */
+    QApplication *app;
+
+    /**
      * Camera parameters
      */
     int cameraWidth;
@@ -234,7 +234,6 @@ protected:
     double zFar;
     double horizontalFov;
 
-    static QApplication* app;
 };
 
 }

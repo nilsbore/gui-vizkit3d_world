@@ -16,50 +16,31 @@
 #include <base/Logging.hpp>
 #include "Utils.hpp"
 
-int g_argc = 1;
-char const *g_argv[] = { "vizkit3d_world" };
-
 namespace vizkit3d_world {
 
-QApplication* Vizkit3dWorld::app = NULL;
+int argc = 1;
+char const*argv[] = { "vizkit3d_world" };
 
-Vizkit3dWorld::Vizkit3dWorld() {
-    this->widget = NULL;
-    this->worldPath = "";
-    this->modelPaths = modelPaths;
-    this->cameraWidth = 800;
-    this->cameraHeight = 600;
-    this->zNear = 0.01;
-    this->zFar = 1000.0;
-    this->horizontalFov = 60.0;
-}
-
-Vizkit3dWorld::~Vizkit3dWorld()
-{
-}
-
-void Vizkit3dWorld::initialize(std::string path,
+Vizkit3dWorld::Vizkit3dWorld(std::string path,
                             std::vector<std::string> modelPaths,
                             std::vector<std::string> ignoredModels,
                             int cameraWidth, int cameraHeight,
                             double horizontalFov,
                             double zNear, double zFar)
+    : worldPath(path)
+    , widget(NULL)
+    , modelPaths(modelPaths)
+    , app(NULL)
+    , cameraWidth((cameraWidth <= 0) ? 800 : cameraWidth)
+    , cameraHeight((cameraHeight <= 0) ? 600 : cameraHeight)
+    , zNear(zNear)
+    , zFar(zFar)
+    , horizontalFov(horizontalFov)
 {
-    this->widget = NULL;
-    this->worldPath = path;
-    this->modelPaths = modelPaths;
-    this->cameraWidth = (cameraWidth <= 0) ? 800 : cameraWidth;
-    this->cameraHeight = (cameraHeight <= 0) ? 600 : cameraHeight;
-    this->zNear = zNear;
-    this->zFar = zFar;
-    this->horizontalFov = horizontalFov;
-
     loadGazeboModelPaths(modelPaths);
 
-    if (!app) {
-        app = new QApplication(g_argc, const_cast<char**>(g_argv));
-    }
-
+    if (!qApp)
+        app = new QApplication(argc, const_cast<char**>(argv));
 
     //main widget to store the plugins and performs the GUI events
     widget = new vizkit3d::Vizkit3DWidget(NULL, cameraWidth, cameraHeight, "world_osg", false);
@@ -84,7 +65,10 @@ void Vizkit3dWorld::initialize(std::string path,
     widget->setCameraManipulator(vizkit3d::NO_MANIPULATOR);
 }
 
-void Vizkit3dWorld::deInitialize() {
+Vizkit3dWorld::~Vizkit3dWorld()
+{
+    app->closeAllWindows();
+
     delete widget;
     toSdfElement.clear();
     robotVizMap.clear();

@@ -18,8 +18,7 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    vizkit3d_world::Vizkit3dWorld g_world;
-    g_world.initialize(argv[1], std::vector<std::string>());
+    vizkit3d_world::Vizkit3dWorld g_world(argv[1], std::vector<std::string>());
     g_world.enableGrabbing();
 
     base::samples::frame::Frame* frame = new base::samples::frame::Frame();
