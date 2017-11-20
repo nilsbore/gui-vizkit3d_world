@@ -18,27 +18,27 @@
 
 namespace vizkit3d_world {
 
-Vizkit3dWorld::Vizkit3dWorld(std::string path, 
+static int argc = 1;
+static char *argv[] = { "vizkit3d_world" };
+
+Vizkit3dWorld::Vizkit3dWorld(std::string path,
                             std::vector<std::string> modelPaths,
                             std::vector<std::string> ignoredModels,
-                            int cameraWidth, int cameraHeight, 
-                            double horizontalFov, 
+                            int cameraWidth, int cameraHeight,
+                            double horizontalFov,
                             double zNear, double zFar)
     : worldPath(path)
     , widget(NULL)
     , modelPaths(modelPaths)
-    , app(NULL)
     , cameraWidth((cameraWidth <= 0) ? 800 : cameraWidth)
     , cameraHeight((cameraHeight <= 0) ? 600 : cameraHeight)
     , zNear(zNear)
     , zFar(zFar)
     , horizontalFov(horizontalFov)
 {
-    loadGazeboModelPaths(modelPaths);
+    if (!qApp) new QApplication(argc, argv);
 
-    int argc = 1;
-    char const*argv[] = { "vizkit3d_world" };
-    app = new QApplication(argc, const_cast<char**>(argv));
+    loadGazeboModelPaths(modelPaths);
 
     //main widget to store the plugins and performs the GUI events
     widget = new vizkit3d::Vizkit3DWidget(NULL, cameraWidth, cameraHeight, "world_osg", false);
@@ -65,11 +65,7 @@ Vizkit3dWorld::Vizkit3dWorld(std::string path,
 
 Vizkit3dWorld::~Vizkit3dWorld()
 {
-    app->closeAllWindows();
-    app->quit();
-
     delete widget;
-    delete app;
     toSdfElement.clear();
     robotVizMap.clear();
 }
