@@ -66,6 +66,7 @@ Vizkit3dWorld::Vizkit3dWorld(std::string path,
 Vizkit3dWorld::~Vizkit3dWorld()
 {
     delete widget;
+    delete qApp;
     toSdfElement.clear();
     robotVizMap.clear();
 }
