@@ -10,12 +10,15 @@
 #include <QtGui>
 #include <QtCore>
 #include <QEvent>
-
+#ifndef Q_MOC_RUN
 #include <boost/algorithm/string.hpp>
+#endif
 #include <vizkit3d_world/Vizkit3dWorld.hpp>
+#ifndef Q_MOC_RUN
 #include <osgViewer/View>
 #include <base/Logging.hpp>
 #include "Utils.hpp"
+#endif
 
 namespace vizkit3d_world {
 
@@ -109,6 +112,41 @@ void Vizkit3dWorld::run() {
         //load the world sdf file and created the vizkit3d::RobotVisualization models
         //It is necessary to create the vizkit3d plugins in the same thread of QApplication
         loadFromFile(worldPath);
+        
+		// START DEBUG
+	
+		//std::string xml = "/home/nbore/Workspace/ros/uw_ws/src/smarc_simulations/smarc_auvs/models/lolo_auv/urdf/lolo_auv_base.urdf.xacro";
+		//std::string xml = "/home/nbore/Workspace/ros/uw_ws/src/smarc_simulations/smarc_auvs/models/lolo_auv/robots/lolo_auv_default.urdf.xacro";
+		std::string xml = "/home/nbore/Workspace/ros/uw_ws/src/smarc_simulations/smarc_auvs/models/lolo_auv/robots/lolo_auv_default.urdf";
+		
+		std::string modelName = "lolo_auv";
+#if 0
+
+		//robotViz->loadFromFile("/home/nbore/Workspace/ros/uw_ws/src/smarc_simulations/smarc_auvs/models/lolo_auv/urdf/lolo_auv_base.urdf.xacro", "auto");
+        sdf::SDFPtr sdf(new sdf::SDF);
+        if (!sdf::init(sdf)) {
+            throw std::runtime_error("unable to initialize sdf");
+        }
+
+        if (!sdf::readString(xml, sdf)) {
+            throw std::invalid_argument("unable to load sdf from string " + xml + "\n");
+        }
+
+        if (!sdf->root->HasElement("robot")) {
+            throw std::invalid_argument("the SDF doesn't have a <robot> tag\n");
+        }
+	    sdf::ElementPtr robotElem = sdf->root->GetElement("robot");	//makeWorld(sdf->root->GetElement("world"), sdf->version);
+		
+		//robotVizMap.insert(std::make_pair("lolo_auv", robotViz));
+        vizkit3d::RobotVisualization* robotViz = robotVizFromSdfModel(robotElem, modelName, sdf->version);
+        robotVizMap.insert(std::make_pair(modelName, robotViz));
+#endif   
+		vizkit3d::RobotVisualization* robotViz = new vizkit3d::RobotVisualization();
+		robotViz->loadFromFile(QString(xml.c_str()), "urdf");
+		robotVizMap.insert(std::make_pair(modelName, robotViz));
+
+		// END DEBUG
+
         attachPlugins();
 
         //apply the tranformations in each model

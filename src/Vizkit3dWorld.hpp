@@ -8,6 +8,7 @@
 #ifndef GUI_VIZKIT3D_WORLD_SRC_VIZKIT3DWORLD_HPP_
 #define GUI_VIZKIT3D_WORLD_SRC_VIZKIT3DWORLD_HPP_
 
+#ifndef Q_MOC_RUN
 #include <string>
 #include <sdf/sdf.hh>
 #include <kdl_parser/kdl_parser.hpp>
@@ -16,11 +17,11 @@
 #include <vizkit3d/QtThreadedWidget.hpp>
 #include <boost/thread/thread.hpp>
 #include <boost/thread/mutex.hpp>
-#include <base/samples/frame.h>
+#include <base/samples/Frame.hpp>
 #include <map>
 
 #include "Events.hpp"
-
+#endif
 namespace vizkit3d_world {
 
 typedef std::map<std::string, vizkit3d::RobotVisualization*> RobotVizMap;
